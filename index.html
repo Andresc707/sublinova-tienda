@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SubliNova</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; background: #f9f9f9; }
+    header { background: #111827; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { margin: 0; font-size: 1.5rem; }
+    .search-bar input { padding: 0.5rem; border-radius: 5px; border: none; width: 200px; }
+    nav { background: #e5e7eb; padding: 0.5rem 2rem; }
+    nav button { margin-right: 10px; padding: 0.5rem 1rem; border: none; background: #d1d5db; cursor: pointer; border-radius: 5px; }
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; padding: 2rem; }
+    .product-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .product-card img { width: 100%; height: 200px; object-fit: cover; }
+    .product-card-content { padding: 1rem; }
+    .product-card-content h3 { margin: 0 0 0.5rem; }
+    .product-card-content button { background: #10b981; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SubliNova</h1>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Buscar productos..." onkeyup="filterProducts()" />
+    </div>
+  </header>
+  <nav>
+    <strong>Categorías:</strong>
+    <button onclick="filterCategory('')">Todos</button>
+    <button onclick="filterCategory('buzo')">Buzos</button>
+    <button onclick="filterCategory('camiseta')">Camisetas</button>
+    <button onclick="filterCategory('gorra')">Gorras</button>
+  </nav>
+  <div class="product-grid" id="products-list"></div>
+
+  <script>
+    const products = [
+      {
+        name: "Buzo Personalizado",
+        category: "buzo",
+        price: 70000,
+        image: "https://cdn.pixabay.com/photo/2021/10/04/18/47/hoodie-6679827_1280.jpg"
+      },
+      {
+        name: "Gorra Urbana",
+        category: "gorra",
+        price: 35000,
+        image: "https://cdn.pixabay.com/photo/2016/11/21/12/42/cap-1845713_1280.jpg"
+      },
+      {
+        name: "Camiseta Estampada",
+        category: "camiseta",
+        price: 40000,
+        image: "https://cdn.pixabay.com/photo/2017/08/06/19/07/t-shirt-2591046_1280.jpg"
+      },
+      {
+        name: "Camiseta Negra",
+        category: "camiseta",
+        price: 39000,
+        image: "https://cdn.pixabay.com/photo/2016/03/26/13/09/t-shirt-1280955_1280.jpg"
+      },
+      {
+        name: "Sudadera Oversize",
+        category: "buzo",
+        price: 85000,
+        image: "https://cdn.pixabay.com/photo/2020/04/09/14/28/hoodie-5021150_1280.jpg"
+      }
+    ];
+
+    function renderProducts() {
+      const container = document.getElementById("products-list");
+      container.innerHTML = "";
+      products.forEach((p, i) => {
+        container.innerHTML += `
+          <div class="product-card" data-name="${p.name.toLowerCase()}" data-category="${p.category}">
+            <img src="${p.image}" alt="${p.name}">
+            <div class="product-card-content">
+              <h3>${p.name}</h3>
+              <p>Precio: $${p.price}</p>
+              <button onclick="buyProduct('${p.name}', ${p.price})">Comprar</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function filterCategory(category) {
+      const cards = document.querySelectorAll(".product-card");
+      cards.forEach(card => {
+        const c = card.getAttribute("data-category");
+        card.style.display = category === "" || c === category ? "" : "none";
+      });
+    }
+
+    function filterProducts() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const cards = document.querySelectorAll(".product-card");
+      cards.forEach(card => {
+        const name = card.getAttribute("data-name");
+        card.style.display = name.includes(query) ? "" : "none";
+      });
+    }
+
+    function buyProduct(name, price) {
+      const phone = "3209932463";
+      const message = `Hola, quiero comprar el producto: ${name} por $${price}`;
+      const url = `https://wa.me/57${phone}?text=${encodeURIComponent(message)}`;
+      window.open(url, "_blank");
+    }
+
+    renderProducts();
+  </script>
+</body>
+</html>
